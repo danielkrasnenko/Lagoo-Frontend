@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CommonComponentsModule } from "./common-components/common-components.module";
 import { SharedComponentsModule } from "./shared/shared-components/shared-components.module";
-import { SharedServicesModule } from "./shared/shared-services/shared-services-module";
+import { SharedServicesModule } from "./shared/shared-services/shared-services.module";
 import { SharedUtilsModule } from "./shared/shared-utils/shared-utils.module";
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -13,6 +13,9 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { ToastrModule } from "ngx-toastr";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { ApiInterceptor } from "./interceptors/api.interceptor";
+import { AccessTokenInterceptor } from "./interceptors/access-token.interceptor";
 
 @NgModule({
   declarations: [
@@ -38,7 +41,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     }),
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AccessTokenInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
