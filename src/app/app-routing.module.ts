@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NotFoundComponent } from "./common-components/not-found/not-found.component";
+import { MainLayoutComponent } from "./common-components/main-layout/main-layout.component";
 
 const routes: Routes = [
   {
@@ -10,7 +11,7 @@ const routes: Routes = [
   },
   {
     path: 'news-feed',
-    // component: MainLayout
+    component: MainLayoutComponent,
     children: [
       {
         path: '',

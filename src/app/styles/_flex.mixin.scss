@@ -1,0 +1,336 @@
+@use '_var' as v;
+@use 'sass:math' as math;
+
+/*
+ * Sets up child margins under all NLF conditions
+ * expects map of spaces ( spaceClass: spacevalue ) and sizes ( sizeClass: sizeValue )
+*/
+
+@mixin flex_cm_widths($spaceMap, $sizeMap, $scope, $sizeMapNoWrap) {
+  @each $spaceClass, $space in $spaceMap {
+    // Handles non-wrapped flex
+    #{v.$flex}#{v.$flex-col}#{v.$flex-notwrap}#{v.$flex-notreverse}.cm\:#{$spaceClass} #{v.$direct-sib}#{v.$not-last},
+    .cm\:#{$spaceClass}:not(#{v.$flex}) #{v.$direct-sib}#{v.$not-last} {
+      @extend %margin-#{$scope}-bottom#{v.de_decimaler($space)};
+    }
+
+    #{v.$flex}#{v.$flex-notcol}#{v.$flex-notwrap}#{v.$flex-notreverse}.cm\:#{$spaceClass}
+    #{v.$direct-sib}#{v.$not-last} {
+      @extend %margin-#{$scope}-right#{v.de_decimaler($space)};
+    }
+
+    #{v.$flex}#{v.$flex-col}#{v.$flex-notwrap}#{v.$flex-reverse}.cm\:#{$spaceClass} #{v.$direct-sib}#{v.$not-last} {
+      @extend %margin-#{$scope}-top#{v.de_decimaler($space)};
+    }
+
+    #{v.$flex}#{v.$flex-notcol}#{v.$flex-notwrap}#{v.$flex-reverse}.cm\:#{$spaceClass} #{v.$direct-sib}#{v.$not-last} {
+      @extend %margin-#{$scope}-left#{v.de_decimaler($space)};
+    }
+
+    @if ($sizeMapNoWrap) {
+      @each $sizeName, $size in $sizeMapNoWrap {
+        $sizeClass: v.string-to-class($sizeName);
+        #{v.$flex}#{v.$flex-notcol}#{v.$flex-notwrap}.cm\:#{$spaceClass} > #{$sizeClass} {
+          $fmargin: ($size / 100%) * (((1 / ($size / 100%)) - 1) * $space);
+          @extend %width-#{$scope}-#{$sizeName + v.de_decimaler($fmargin)};
+        }
+      }
+    }
+
+    // Handles wrap:
+    $half-margin: v.get-rem-half($space);
+
+    #{v.$flex}#{v.$flex-wrap}.cm\:#{$spaceClass} {
+      // margin: -$half-margin;
+      @extend %margin-#{$scope}-all#{v.de_decimaler($space / -2)};
+    }
+
+    #{v.$flex}#{v.$flex-wrap}.cm\:#{$spaceClass} #{v.$direct-sib} {
+      // margin: $half-margin;
+      @extend %margin-#{$scope}-all#{v.de_decimaler($space / 2)};
+    }
+
+    @each $parentSpaceClass, $parentSpace in $spaceMap {
+      $margin-diff: (-$space / 2) + $parentSpace;
+
+      .cm\:#{$parentSpaceClass}:not(#{v.$flex}) > #{v.$flex}#{v.$flex-wrap}.cm\:#{$spaceClass}#{v.$not-last},
+      .cm\:#{$parentSpaceClass}#{v.$flex}#{v.$flex-col} > #{v.$flex}#{v.$flex-wrap}.cm\:#{$spaceClass}#{v.$not-last} {
+        // margin-bottom: v.get-rem($margin-diff);
+        @extend %margin-#{$scope}-bottom#{v.de_decimaler($margin-diff)};
+      }
+
+      $margin-diff: (-$space / 2) + ($parentSpace / 2);
+
+      #{v.$flex}#{v.$flex-wrap}.cm\:#{$parentSpaceClass} > #{v.$flex}#{v.$flex-wrap}.cm\:#{$spaceClass} {
+        // margin: v.get-rem($margin-diff);
+        @extend %margin-#{$scope}-all#{v.de_decimaler($margin-diff)};
+      }
+
+      @each $sizeName, $size in $sizeMap {
+        $sizeClass: v.string-to-class($sizeName);
+        #{v.$flex}#{v.$flex-wrap}.cm\:#{$parentSpaceClass} > #{$sizeClass}#{v.$flex}#{v.$flex-wrap}.cm\:#{$spaceClass} {
+          $fmargin: ($size / 100%) * (((1 / ($size / 100%)) - 1) * $margin-diff);
+          @extend %width-#{$scope}-#{$sizeName + v.de_decimaler($fmargin)};
+        }
+      }
+    }
+
+    $margin: v.get-rem($space);
+    @each $sizeName, $size in $sizeMap {
+      $sizeClass: v.string-to-class($sizeName);
+      #{v.$flex}#{v.$flex-wrap}.cm\:#{$spaceClass} > #{$sizeClass} {
+        $nspace: v.de_decimaler($space);
+        @extend %width-#{$scope}-#{$sizeName + $nspace};
+      }
+    }
+  }
+}
+
+/*
+ * Sets up padding teirs & unique overwrites (nlp-p40-pt20)
+ * MASSIVE ASSUMPTION: NLP assigned should have ( paddingValue >= CMvalue / 2 )
+ * condition above is unsupported due to awkward visual UI. (small padding on the parent and SUPER spaced out children)
+ */
+@mixin nlp_flex($spaceMap, $scope) {
+  @each $class, $space in $spaceMap {
+    #{v.$nlp}[class*='-p#{$class}'] {
+      @extend %pad#{'-' + $scope}-top#{$space};
+      @extend %pad#{'-' + $scope}-left#{$space};
+      @extend %pad#{'-' + $scope}-bottom#{$space};
+      @extend %pad#{'-' + $scope}-right#{$space};
+    }
+
+    @each $type, $position in v.$pad-type-list {
+      #{v.$nlp}[class*='-#{$type}#{$class}'] {
+        @if length($position) > 1 {
+          @each $detail in $position {
+            @extend %pad#{'-' + $scope}-#{$detail}#{$space};
+          }
+        } @else {
+          @extend %pad#{'-' + $scope}-#{$position}#{$space};
+        }
+      }
+
+      @each $class2, $space2 in $spaceMap {
+        @if (index($spaceMap, $class $space) >= index($spaceMap, $class2 $space2) and $space != $space2) {
+          $finalVal: $space - ($space2 / 2);
+
+          @if length($position) > 1 {
+            #{v.$nlp}[class*='-p#{$class}'][class*='-#{$type}#{$class2}'] {
+              @each $detail in $position {
+                @extend %pad#{'-' + $scope}-#{$detail}#{$finalVal};
+              }
+            }
+          } @else {
+            #{v.$nlp}[class*='-p#{$class}'][class*='-#{$type}#{$class2}'] {
+              @extend %pad#{'-' + $scope}-#{$position}#{$finalVal};
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/*
+ * Adjusts all values for NLP according to self and parent NLF CM conditions.
+*/
+@mixin nlp_vs_cm($spaceMap, $scope) {
+  @each $padClassMod3, $padStyleMod3 in v.$pad-type-list {
+    @each $padVCM3, $padV3 in $spaceMap {
+      @each $spaceVCM3, $spaceV3 in $spaceMap {
+        @if (index($spaceMap, $padVCM3 $padV3) >= index($spaceMap, $spaceVCM3 $spaceV3)) {
+          $finalVal3: $padV3 - ($spaceV3 / 2);
+          @if ($finalVal3 > 0) {
+            #{v.$nlp}[class*='-p#{$padVCM3}']#{v.$flex}#{v.$flex-wrap}.cm\:#{$spaceVCM3},
+            #{v.$nlp}[class*='-#{$padClassMod3}#{$padVCM3}']#{v.$flex}#{v.$flex-wrap}.cm\:#{$spaceVCM3} {
+              @if (length($padStyleMod3) < 2) {
+                @extend %pad#{'-' + $scope}-#{$padStyleMod3}#{$finalVal3};
+              } @else {
+                @each $dir in $padStyleMod3 {
+                  @extend %pad#{'-' + $scope}-#{$dir}#{$finalVal3};
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Value map generator. Gather values to create mixings with NLP map
+@function nlpValuinator($spaceMap) {
+  $returnMap: ();
+  @each $padClassMod, $nlpClassMod in v.$pad-type-list {
+    @if (length($nlpClassMod) == 1) {
+      @each $spaceSelectorMod, $spaceValue in $spaceMap {
+        $returnMap: map-merge(
+            $returnMap,
+            (
+              $nlpClassMod +
+              $spaceValue:
+              (
+                $nlpClassMod: $spaceValue,
+              )
+            )
+        );
+
+        @each $compareSpaceSelectorMod, $compareSpaceValue in $spaceMap {
+          @if (
+            index($spaceMap, $compareSpaceSelectorMod $compareSpaceValue) >=
+              index($spaceMap, $spaceSelectorMod $spaceValue)
+          ) {
+            $compareVal: $compareSpaceValue - ($spaceValue / 2);
+
+            @if ($compareVal >= 0) {
+              $returnMap: map-merge(
+                  $returnMap,
+                  (
+                    $nlpClassMod +
+                    $compareVal:
+                    (
+                      $nlpClassMod: $compareVal,
+                    )
+                  )
+              );
+            }
+          }
+        }
+      }
+    }
+  }
+  @return $returnMap;
+}
+
+@function marginValuinator($spaceMap) {
+  $marginMap: ();
+  @each $spaceSelectorMod, $spaceValue in $spaceMap {
+    @each $padClassMod, $nlpClassMod in v.$pad-type-list {
+      @if (length($nlpClassMod) == 1) {
+        // normal directional margins
+        // top64: (top : 64)
+        $marginMap: map-merge(
+            $marginMap,
+            (
+              $nlpClassMod +
+              (v.de_decimaler($spaceValue)):
+              (
+                $nlpClassMod: $spaceValue,
+              )
+            )
+        );
+      }
+    }
+
+    @if (map-get($marginMap, 'all' + (v.de_decimaler($spaceValue / 2))) == null) {
+      $marginMap: map-merge(
+          $marginMap,
+          (
+            'all' +
+            (v.de_decimaler($spaceValue / 2)):
+            (
+              'all': $spaceValue / 2,
+            )
+          )
+      );
+    }
+
+    @if (map-get($marginMap, 'all' + (v.de_decimaler($spaceValue / -2))) == null) {
+      $marginMap: map-merge(
+          $marginMap,
+          (
+            'all' +
+            (v.de_decimaler($spaceValue / -2)):
+            (
+              'all': $spaceValue / -2,
+            )
+          )
+      );
+    }
+
+    @each $compareSpaceSelectorMod, $compareSpaceValue in $spaceMap {
+      $margin-diff: (-$spaceValue / 2) + $compareSpaceValue;
+      @if (map-get($marginMap, 'bottom' + (v.de_decimaler($margin-diff))) == null) {
+        $marginMap: map-merge(
+            $marginMap,
+            (
+              'bottom' +
+              (v.de_decimaler($margin-diff)):
+              (
+                'bottom': $margin-diff,
+              )
+            )
+        );
+      }
+
+      $margin-diff: (-$spaceValue / 2) + ($compareSpaceValue / 2);
+      @if (map-get($marginMap, 'all' + (v.de_decimaler($margin-diff))) == null) {
+        $marginMap: map-merge(
+            $marginMap,
+            (
+              'all' +
+              (v.de_decimaler($margin-diff)):
+              (
+                'all': $margin-diff,
+              )
+            )
+        );
+      }
+    }
+  }
+  @return $marginMap;
+}
+
+@function widthValuinator($spaceMap, $sizeMap) {
+  $widthMap: ();
+  @each $spaceSelectorMod, $spaceValue in $spaceMap {
+    @each $sizeSelector, $sizeValue in $sizeMap {
+      // normal widths
+      $widthMap: map-merge(
+          $widthMap,
+          (
+            $sizeSelector +
+            (v.de_decimaler($spaceValue)):
+            (
+              $spaceValue: $sizeValue,
+            )
+          )
+      );
+
+      // fractioned widths
+      $calcedVal: ($sizeValue / 100%) * (((1 / ($sizeValue / 100%)) - 1) * $spaceValue);
+      @if (map-get($widthMap, $sizeSelector + (v.de_decimaler($calcedVal))) == null) {
+        $widthMap: map-merge(
+            $widthMap,
+            (
+              $sizeSelector +
+              (v.de_decimaler($calcedVal)):
+              (
+                $calcedVal: $sizeValue,
+              )
+            )
+        );
+      }
+
+      // parent fractioned widths
+      @each $parentSpaceSelectorMod, $parentSpaceValue in $spaceMap {
+        $calcedVal2: ($sizeValue / 100%) *
+          (((1 / ($sizeValue / 100%)) - 1) * ((-$spaceValue / 2) + ($parentSpaceValue / 2)));
+        @if (map-get($widthMap, $sizeSelector + (v.de_decimaler($calcedVal2))) == null) {
+          $widthMap: map-merge(
+              $widthMap,
+              (
+                $sizeSelector +
+                (v.de_decimaler($calcedVal2)):
+                (
+                  $calcedVal2: $sizeValue,
+                )
+              )
+          );
+        }
+      }
+    }
+  }
+  @return $widthMap;
+}

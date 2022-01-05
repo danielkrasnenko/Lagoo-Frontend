@@ -1,0 +1,318 @@
+@use '_var' as v;
+@use './flex.mixin' as m;
+
+[class*='flex'] {
+  display: flex;
+
+  &[class*='-wrap'] {
+    flex-wrap: wrap;
+  }
+
+  &[class*='-limited'] {
+    overflow: hidden;
+  }
+
+  & .fit {
+    flex: 0 0 auto;
+  }
+  & .auto {
+    flex: 1 1 auto;
+  }
+  & .fit-auto {
+    flex: 0 1 auto;
+  }
+  & .auto.fit,
+  & .auto-fit {
+    flex: 1 0 auto;
+  }
+
+  .ui-tabs &.ui-tab-panel,
+  .ui-tabs &.ui-conditional-panel {
+    display: none;
+  }
+
+  .ui-tabs &.ui-tab-panel.active,
+  .ui-tabs &.ui-conditional-panel.active {
+    display: flex;
+  }
+
+  &[class*='-inline'] {
+    display: inline-flex;
+  }
+
+  &[class*='-center'] {
+    justify-content: center;
+  }
+  &[class*='-end'] {
+    justify-content: flex-end;
+  }
+  &[class*='-start'] {
+    justify-content: flex-start;
+  }
+  &[class*='-between'] {
+    justify-content: space-between;
+  }
+  &[class*='-around'] {
+    justify-content: space-around;
+  }
+  &[class*='-evenly'] {
+    justify-content: space-evenly;
+  }
+
+  &[class*='-middle'] {
+    align-items: center;
+  }
+  &[class*='-top'] {
+    align-items: flex-start;
+  }
+  &[class*='-baseline'] {
+    align-items: baseline;
+  }
+  &[class*='-bottom'] {
+    align-items: flex-end;
+  }
+
+  &[class*='-row'] {
+    flex-direction: row;
+  }
+  &[class*='-reverse'] {
+    flex-direction: row-reverse;
+  }
+  &[class*='-column'] {
+    flex-direction: column;
+  }
+  &[class*='-reverse'][class*='-column'] {
+    flex-direction: column-reverse;
+  }
+
+  &[class*='-stretch'],
+  & > .stretch-self {
+    align-self: stretch;
+  }
+}
+
+%no-margin {
+  margin: 0;
+}
+
+$merged-space-map: map-merge(v.$spaces, v.$spacesNiche);
+// we add 0 for the first run, they will never change.
+$merged-space-map2: map-merge($merged-space-map, v.$spaceNuller);
+
+$valueOpt: m.nlpValuinator($merged-space-map2);
+// loops through map creating , scope 'norm'
+@each $padStyleMod2, $styleValue in $valueOpt {
+  @each $style2, $value2 in $styleValue {
+    %pad-norm-#{$padStyleMod2} {
+      padding-#{$style2}: v.get-rem($value2);
+    }
+  }
+}
+
+$widthVals: m.widthValuinator(v.$spaces, v.$sizes);
+
+@each $className, $valueMap in $widthVals {
+  @each $value, $size in $valueMap {
+    %width-norm-#{$className} {
+      @if ($value == 0) {
+        width: $size;
+      } @else if ($value < 0) {
+        width: calc(#{$size} + #{v.get-rem($value * -1)});
+      } @else {
+        width: calc(#{$size} - #{v.get-rem($value)});
+      }
+    }
+  }
+}
+
+$marginVals: m.marginValuinator(v.$spaces);
+
+@each $className, $valueMap in $marginVals {
+  @each $selector, $value in $valueMap {
+    %margin-norm-#{$className} {
+      @if ($selector != 'all') {
+        margin-#{$selector}: v.get-rem($value);
+      } @else {
+        margin: v.get-rem($value);
+      }
+    }
+  }
+}
+// base values
+@include m.nlp_flex(v.$spaces, 'norm');
+@include m.nlp_vs_cm(v.$spaces, 'norm');
+@include m.flex_cm_widths(v.$spaces, v.$sizes, 'norm', v.$sizes);
+// niche values
+@include m.nlp_flex(v.$spacesNiche, 'norm');
+// 0 values
+@include m.nlp_flex(v.$spaceNuller, 'norm');
+
+// Responsive
+$spaces1600: (
+  '40': v.$baseline * 3,
+  '60': v.$baseline * 5,
+  '80': v.$baseline * 6,
+);
+
+$nicheSpaces1600: (
+  '160': v.$baseline * 8,
+);
+
+$r1600: (
+  'spaces': $spaces1600,
+  'nicheSpaces': $nicheSpaces1600,
+);
+
+$sizes1280: (
+  third: 50%,
+  fourth: 50%,
+  fifth: 33.33%,
+  two-fifths: 50%,
+  three-fifths: 50%,
+  two-thirds: 50%,
+);
+
+$noWrapSizes1280: (
+  fifth: 33.33%,
+  two-fifths: 33.33%,
+  three-fifths: 66.66%,
+);
+
+$spaces1280: (
+  '30': v.$baseline * 2,
+  '40': v.$baseline * 2.5,
+  '60': v.$baseline * 3,
+  '80': v.$baseline * 5,
+);
+
+$nicheSpaces1280: (
+  '160': v.$baseline * 8,
+);
+
+$r1280: (
+  'spaces': $spaces1280,
+  'sizes': $sizes1280,
+  'nicheSpaces': $nicheSpaces1280,
+  'noWrapSizes': $noWrapSizes1280,
+);
+
+$sizes1024: (
+  half: 100%,
+  third: 50%,
+  fourth: 50%,
+  fifth: 50%,
+  two-fifths: 100%,
+  three-fifths: 100%,
+  two-thirds: 100%,
+);
+
+$spaces1024: (
+  '30': v.$baseline * 2,
+  '40': v.$baseline * 2,
+  '60': v.$baseline * 3,
+  '80': v.$baseline * 4,
+);
+
+$nicheSpaces1024: (
+  '160': v.$baseline * 8,
+);
+
+$r1024: (
+  'spaces': $spaces1024,
+  'sizes': $sizes1024,
+  'nicheSpaces': $nicheSpaces1024,
+);
+
+$responsiveMap: (
+  1600: $r1600,
+  1280: $r1280,
+  1024: $r1024,
+);
+
+@each $responsiveWidth, $data in $responsiveMap {
+  @media (max-width: $responsiveWidth + px) {
+    $sizeHelper: ();
+
+    $respSpaceMap: map-get($data, 'spaces');
+    $respSizeMap: map-get($data, 'sizes');
+    $respNicheSizeMap: map-get($data, 'nicheSpaces');
+    $respNoWrapSizes: map-get($data, 'noWrapSizes');
+
+    // compare new space values to original, use the news ones, but we need a full map, so backfill unamed with original
+    $spaceHelper: v.overwriteMapValues(v.$spaces, $respSpaceMap);
+
+    // compare new size values to original, use the news ones, but we need a full map, so backfill unamed with original
+    @if ($respSizeMap) {
+      $sizeHelper: v.overwriteMapValues(v.$sizes, $respSizeMap);
+    } @else {
+      $sizeHelper: v.$sizes;
+    }
+
+    $valueOptResp: m.nlpValuinator(map-merge($spaceHelper, $respNicheSizeMap));
+    @each $padStyleMod2, $styleValue in $valueOptResp {
+      @each $style2, $value2 in $styleValue {
+        %pad-#{$responsiveWidth}-#{$padStyleMod2} {
+          padding-#{$style2}: v.get-rem($value2);
+        }
+      }
+    }
+
+    $respWidthVals: m.widthValuinator($spaceHelper, $sizeHelper);
+    @each $className, $valueMap in $respWidthVals {
+      @each $value, $size in $valueMap {
+        %width-#{$responsiveWidth}-#{$className} {
+          @if ($value == 0) {
+            width: $size;
+          } @else if ($value < 0) {
+            width: calc(#{$size} + #{v.get-rem($value * -1)});
+          } @else {
+            width: calc(#{$size} - #{v.get-rem($value)});
+          }
+        }
+      }
+    }
+
+    $noWrapSizeHelper: v.$sizes;
+
+    @if ($respNoWrapSizes) {
+      $noWrapSizeHelper: v.overwriteMapValues(v.$sizes, $respNoWrapSizes);
+    }
+
+    $respNoWrapWidthVals: m.widthValuinator($spaceHelper, $noWrapSizeHelper);
+
+    @each $className, $valueMap in $respNoWrapWidthVals {
+      @each $value, $size in $valueMap {
+        %width-#{$responsiveWidth}-#{$className} {
+          @if ($value == 0) {
+            width: $size;
+          } @else if ($value < 0) {
+            width: calc(#{$size} + #{v.get-rem($value * -1)});
+          } @else {
+            width: calc(#{$size} - #{v.get-rem($value)});
+          }
+        }
+      }
+    }
+
+    $respMarginVals: m.marginValuinator($spaceHelper);
+
+    @each $className, $valueMap in $respMarginVals {
+      @each $selector, $value in $valueMap {
+        %margin-#{$responsiveWidth}-#{$className} {
+          @if ($selector == 'top' or $selector == 'bottom' or $selector == 'right' or $selector == 'left') {
+            margin-#{$selector}: v.get-rem($value);
+          } @else if ($selector == 'diffBottom') {
+            margin-bottom: v.get-rem($value);
+          } @else {
+            margin: v.get-rem($value);
+          }
+        }
+      }
+    }
+
+    @include m.nlp_flex($respSpaceMap, $responsiveWidth);
+    @include m.nlp_vs_cm($respSpaceMap, $responsiveWidth);
+    @include m.flex_cm_widths($spaceHelper, $sizeHelper, $responsiveWidth, $noWrapSizeHelper);
+    @include m.nlp_flex($respNicheSizeMap, $responsiveWidth);
+  }
+}

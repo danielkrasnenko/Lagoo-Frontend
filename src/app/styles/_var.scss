@@ -1,0 +1,175 @@
+@use 'sass:math' as math;
+
+[class*='fill'] {
+  flex-grow: 1;
+
+  &[class*='-height'] {
+    height: 100%;
+  }
+
+  &[class*='-width'] {
+    width: 100%;
+  }
+
+  &[class*='-screen'] {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  &[class*='-area'] {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+// Website base font size
+$basefont: 16;
+
+$flex-border-color: rgb(222, 223, 227);
+
+$baseline: 8;
+$spaces: (
+  '05': $baseline * 0.5,
+  '10': $baseline * 1,
+  '15': $baseline * 1.5,
+  '20': $baseline * 2,
+  '30': $baseline * 3,
+  '40': $baseline * 4,
+  '60': $baseline * 6,
+  '80': $baseline * 8,
+);
+
+$spacesNiche: (
+  '160': $baseline * 16,
+);
+
+$spaceNuller: (
+  '00': $baseline * 0,
+);
+
+// Sizes
+$sizes: (
+  full: 100%,
+  half: 50%,
+  third: 33.33%,
+  fourth: 25%,
+  fifth: 20%,
+  two-fifths: 40%,
+  three-fifths: 60%,
+  two-thirds: 66.67%,
+  three-fourths: 75%,
+  four-fifths: 80%,
+);
+
+// Flex Styles
+$flex: "[class*='flex']";
+$flex-wrap: "[class*='-wrap']";
+$flex-notwrap: ":not([class*='-wrap'])";
+$flex-col: "[class*='-column']";
+$flex-notcol: ":not([class*='-column'])";
+$flex-notcolwrap: ":not([class*='-wrap']):not([class*='-column'])";
+$flex-col-notwrap: "[class*='-column']:not([class*='-wrap'])";
+$flex-reverse: "[class*='-reverse']";
+$flex-notreverse: ":not([class*='-reverse'])";
+$direct-sib: '> *:not(option)';
+$not-last: ':not(:last-child)';
+
+$no-margin: '[class*="-nomargin"]';
+
+// Padding Direction Standards
+$nlp: '[class*="nlp-"]';
+$pad-type-list: (
+  'pt': top,
+  'pb': bottom,
+  'pr': right,
+  'pl': left,
+  'pv': (
+    top,
+    bottom,
+  ),
+  'ph': (
+    left,
+    right,
+  ),
+);
+
+/**
+ * Functions
+ */
+
+// Strip unit function
+@function strip-unit($number) {
+  @if type-of($number) == 'number' and not unitless($number) {
+    @return $number / ($number * 0 + 1);
+  }
+
+  @return $number;
+}
+
+// Slice a map
+@function slice($list, $start: 1, $end: length($list)) {
+  $result: ();
+
+  @for $i from $start through $end {
+    $result: append($result, nth($list, $i));
+  }
+
+  @return $result;
+}
+
+// Color Fade
+@function fade($color, $amount: 1) {
+  $inverse: change-color($color, $alpha: $amount);
+  @return $inverse;
+}
+
+// REM & EM
+// gets em/rem value from unitless value.
+@function get-rem($value) {
+  @return ($value) / $basefont * 1rem;
+}
+
+@function get-rem-half($value) {
+  @return ($value / 2) / $basefont * 1rem;
+}
+
+@function get-em($value) {
+  @return ($value) / $basefont * 1em;
+}
+
+@function get-em-half($value) {
+  @return ($value / 2) / $basefont * 1em;
+}
+
+// string manimulation
+@function string-to-class($string) {
+  @return '.' + $string;
+}
+
+// Compare 2 maps of like key:value pairs, the OG's values will be overwritten by the overwrites's matching key
+@function overwriteMapValues($ogMap, $overwriteMap) {
+  $finalMap: ();
+  @each $ogSpaceName, $ogSpaceVal in $ogMap {
+    $possibleVal: map-get($overwriteMap, $ogSpaceName);
+    @if ($possibleVal) {
+      $finalMap: map-merge(
+          $finalMap,
+          (
+            $ogSpaceName: $possibleVal,
+          )
+      );
+    } @else {
+      $finalMap: map-merge(
+          $finalMap,
+          (
+            $ogSpaceName: $ogSpaceVal,
+          )
+      );
+    }
+  }
+  @return $finalMap;
+}
+
+@function de_decimaler($value) {
+  @return math.floor($value * 100000);
+}
