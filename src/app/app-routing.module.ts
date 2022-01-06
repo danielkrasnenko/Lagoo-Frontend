@@ -10,11 +10,15 @@ const routes: Routes = [
     redirectTo: 'news-feed'
   },
   {
-    path: 'news-feed',
+    path: '',
     component: MainLayoutComponent,
     children: [
       {
-        path: '',
+        path: 'auth',
+        loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule)
+      },
+      {
+        path: 'news-feed',
         // loadChildren: () => import('./features/news-feed.news-feed.module').then(m => m.NewsFeedModule)
       }
     ]

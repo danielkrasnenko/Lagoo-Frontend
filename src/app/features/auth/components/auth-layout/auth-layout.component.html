@@ -1,0 +1,13 @@
+<div class="layout-header">
+  <div class="logo">Name</div>
+  <div class="nav">
+    <a class="nav-item">How it works</a>
+    <a class="nav-item">About us</a>
+    <a class="nav-item">Contact us</a>
+  </div>
+  <a *ngIf="router.url !== '/auth/login'" class="login-link" routerLink="/auth/login">Login</a>
+  <a *ngIf="router.url !== '/auth/register'" class="register-link btn" routerLink="/auth/register">Register</a>
+</div>
+
+<router-outlet></router-outlet>
+

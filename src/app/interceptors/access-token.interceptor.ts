@@ -7,11 +7,11 @@ import {
   HttpInterceptor,
   HttpRequest
 } from "@angular/common/http";
-import { AuthDataService } from "../shared/shared-services/auth-data-storage/auth-data.service";
+import { AuthDataService } from "../shared/shared-services/auth-data/auth-data.service";
 import { Router } from "@angular/router";
 import { catchError, Observable, switchMap, tap, throwError } from "rxjs";
 import { EnvironmentService } from "../shared/shared-services/environment/environment.service";
-import { AccessTokenData } from "../shared/shared-services/auth-data-storage/models/access-token-data";
+import { AccessTokenData } from "../shared/shared-services/auth-data/models/access-token-data";
 import { AuthHttpService } from "../features/auth/services/auth-http.service";
 
 @Injectable()
@@ -36,7 +36,7 @@ export class AccessTokenInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
           if (authData && this.authDataService.refreshTokenIsValid(authData)) {
-            return this.tryRefreshAccessToken(authData.refreshToken).pipe(
+            return this.tryRefreshAccessToken(authData.refreshToken, authData.accessToken).pipe(
               switchMap((accessTokenData: AccessTokenData) =>
                 next.handle(this.attachAccessTokenToRequest(req, accessTokenData.accessToken)).pipe(
                   catchError(err => {
@@ -60,8 +60,8 @@ export class AccessTokenInterceptor implements HttpInterceptor {
     return req.clone({ setHeaders: { Authorization: `Bearer ${accessToken}` } });
   }
 
-  private tryRefreshAccessToken(refreshToken: string) {
-    return this.authHttpService.refreshAccessToken(refreshToken).pipe(
+  private tryRefreshAccessToken(refreshToken: string, accessToken: string) {
+    return this.authHttpService.refreshAccessToken({ refreshTokenValue: refreshToken, accessToken }).pipe(
       tap(accessTokenData => this.authDataService.updateAccessToken(accessTokenData))
     );
   }
