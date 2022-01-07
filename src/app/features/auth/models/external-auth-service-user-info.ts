@@ -12,7 +12,7 @@ export interface ExternalAuthServiceUserInfoDto {
   email: string;
 }
 
-export interface GetExternalAuthServiceUserInfoDto {
-  accessToken: string;
+export interface GetExternalAuthServiceUserInfoParams {
   externalAuthService: ExternalAuthService;
+  externalAuthServiceAccessToken: string;
 }

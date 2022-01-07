@@ -1,0 +1,19 @@
+<div class="form-container flex-center m-t-35">
+  <div>
+    <app-external-auth-services
+      (externalAuthServiceClick)="handleUserExternalAuthentication($event)"
+    >
+    </app-external-auth-services>
+    <form *ngIf="loginForm$ | async as loginForm" [ngrxFormState]="loginForm" (ngSubmit)="handleFormSubmission()" class="login-form">
+      <mat-form-field class="field-full-width" appearance="fill">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput [ngrxFormControlState]="loginForm.controls.email" placeholder="Enter your email">
+      </mat-form-field>
+      <mat-form-field class="field-full-width" appearance="fill">
+        <mat-label>Password</mat-label>
+        <input type="password" matInput [ngrxFormControlState]="loginForm.controls.password" placeholder="Enter password">
+      </mat-form-field>
+      <button class="w-100" type="submit" mat-raised-button color="primary">Login</button>
+    </form>
+  </div>
+</div>

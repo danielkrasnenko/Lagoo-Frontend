@@ -1,0 +1,39 @@
+.layout-header {
+  background-color: #e91e63;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+
+  .logo {
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 20px;
+    color: #ffcc00;
+    margin-right: 60px;
+  }
+
+  .nav {
+    display: flex;
+    margin-right: auto;
+    cursor: pointer;
+    color: #ffffff;
+  }
+
+  .nav-item {
+    font-size: 14px;
+    line-height: 20px;
+    white-space: nowrap;
+    cursor: pointer;
+    color: #ffffff;
+    text-decoration: none;
+
+    &:not(:last-of-type) {
+      margin-right: 40px;
+    }
+
+    &:hover {
+      color: #000000;
+    }
+  }
+}

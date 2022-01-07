@@ -17,10 +17,10 @@ const routes: Routes = [
         path: 'auth',
         loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule)
       },
-      {
-        path: 'news-feed',
-        // loadChildren: () => import('./features/news-feed.news-feed.module').then(m => m.NewsFeedModule)
-      }
+      // {
+      //   path: 'news-feed',
+      //   loadChildren: () => import('./features/news-feed.news-feed.module').then(m => m.NewsFeedModule)
+      // }
     ]
   },
   {

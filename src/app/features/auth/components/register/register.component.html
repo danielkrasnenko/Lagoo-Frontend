@@ -1,0 +1,30 @@
+<div class="form-container flex-center m-t-35">
+  <div>
+    <app-external-auth-services
+      (externalAuthServiceClick)="handleUserExternalAuthentication($event)"
+    ></app-external-auth-services>
+    <form *ngIf="registerForm$ | async as registerForm" [ngrxFormState]="registerForm" (ngSubmit)="handleFormSubmission()" class="register-form">
+      <mat-form-field class="field-full-width" appearance="fill">
+        <mat-label>First name</mat-label>
+        <input type="text" matInput [ngrxFormControlState]="registerForm.controls.firstName" placeholder="Enter your first name">
+      </mat-form-field>
+      <mat-form-field class="field-full-width" appearance="fill">
+        <mat-label>Last name</mat-label>
+        <input type="text" matInput [ngrxFormControlState]="registerForm.controls.firstName" placeholder="Enter your last name">
+      </mat-form-field>
+      <mat-form-field class="field-full-width" appearance="fill">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput [ngrxFormControlState]="registerForm.controls.email" placeholder="Enter your email">
+      </mat-form-field>
+      <mat-form-field class="field-full-width" appearance="fill">
+        <mat-label>Password</mat-label>
+        <input type="password" matInput [ngrxFormControlState]="registerForm.controls.password" placeholder="Enter a password">
+      </mat-form-field>
+      <mat-form-field class="field-full-width" appearance="fill">
+        <mat-label>Confirm Password</mat-label>
+        <input type="password" matInput [ngrxFormControlState]="registerForm.controls.confirmPassword" placeholder="Enter a confirm password">
+      </mat-form-field>
+      <button class="w-100" type="submit" mat-raised-button color="primary">Register</button>
+    </form>
+  </div>
+</div>

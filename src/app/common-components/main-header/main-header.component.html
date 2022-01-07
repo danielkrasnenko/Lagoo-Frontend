@@ -1,0 +1,12 @@
+<div class="layout-header">
+  <div class="logo" [routerLink]="['/']">Lagoo</div>
+  <div class="nav">
+    <a class="nav-item">How it works</a>
+    <a class="nav-item">About us</a>
+    <a class="nav-item m-r-30" [routerLink]="['/projects', 'list']">My Projects</a>
+    <a class="nav-item m-r-30" [routerLink]="['/news-feed']">News feed</a>
+  </div>
+  <a *ngIf="user !== '/auth/login'" class="nav-item login-link" [routerLink]="['/auth', 'login']">Login</a>
+  <a *ngIf="user !== '/auth/register'" class="nav-item register-link" [routerLink]="['/auth', 'register']">Register</a>
+  <a *ngIf="user !== ''" class="nav-item logout-link">Logout</a>
+</div>

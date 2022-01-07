@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { AccessTokenData } from "../../../shared/shared-services/auth-data/models/access-token-data";
 import {
   ExternalAuthServiceUserInfo, ExternalAuthServiceUserInfoDto,
-  GetExternalAuthServiceUserInfoDto
+  GetExternalAuthServiceUserInfoParams
 } from "../models/external-auth-service-user-info";
 import { Observable } from "rxjs";
 import { AccessTokenDataDto } from "../models/dtos/access-token-data-dto";
@@ -16,7 +16,7 @@ import { RefreshAccessTokenDto } from "../models/dtos/refresh-access-token-dto";
 
 @Injectable()
 export class AuthHttpService {
-  private apiEndpoint = 'api/account/auth';
+  private apiEndpoint = 'api/accounts/auth';
 
   constructor(private http: HttpClient) {}
 
@@ -36,7 +36,7 @@ export class AuthHttpService {
     return this.http.post<AccessTokenDataDto>(`${this.apiEndpoint}/refresh`, { refreshAccessTokenDto });
   }
 
-  getExternalAuthServiceUserInfo(getExternalAuthServiceUserInfoDto: GetExternalAuthServiceUserInfoDto): Observable<ExternalAuthServiceUserInfo> {
-    return this.http.post<ExternalAuthServiceUserInfoDto>(`${this.apiEndpoint}/external-service/user-info`, getExternalAuthServiceUserInfoDto);
+  getExternalAuthServiceUserInfo(getExternalAuthServiceUserInfoDto: GetExternalAuthServiceUserInfoParams): Observable<ExternalAuthServiceUserInfo> {
+    return this.http.get<ExternalAuthServiceUserInfoDto>(`${this.apiEndpoint}/external-service/user-info`, { params: getExternalAuthServiceUserInfoDto as any });
   }
 }
