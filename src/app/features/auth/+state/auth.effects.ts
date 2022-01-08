@@ -28,19 +28,24 @@ export class AuthEffects {
         firstName: registerForm.value.firstName,
         lastName: registerForm.value.lastName,
         email: registerForm.value.email,
-        // Passwords for creating an account in the app
         password: registerForm.value.password,
         confirmPassword: registerForm.value.confirmPassword,
-        // Fill DTO with external auth service data in case of external authentication
-        externalAuthService: this.externalAuthDataStorageService.getExternalAuthService(),
-        externalAuthServiceAccessToken: this.externalAuthDataStorageService.getExternalAuthServiceAccessToken(),
         deviceId
       })),
-      switchMap(registerUserDto =>
-        this.authHttpService.registerUser(registerUserDto).pipe(
+      switchMap(registerUserDto => {
+        // Fill DTO with external auth service data in case of external authentication
+        const externalAuthService = this.externalAuthDataStorageService.getExternalAuthService();
+        const externalAuthServiceAccessToken = this.externalAuthDataStorageService.getExternalAuthServiceAccessToken();
+        if (externalAuthService && externalAuthServiceAccessToken) {
+          registerUserDto.externalAuthService = externalAuthService;
+          registerUserDto.externalAuthServiceAccessToken = externalAuthServiceAccessToken;
+        }
+
+        return this.authHttpService.registerUser(registerUserDto).pipe(
           map(authData => AuthActions.registerUserSuccess({ authData })),
           catchError(error => of(AuthActions.registerUserFail({ error })))
-        )
+        );
+        }
       )
     )
   );
@@ -86,6 +91,7 @@ export class AuthEffects {
           refreshToken: authData.refreshToken,
           refreshTokenExpiresAt: authData.refreshTokenExpiresAt
         });
+        this.externalAuthDataStorageService.clearExternalAuthData();
         this.router.navigate(['/']);
       })
     ),

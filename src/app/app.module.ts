@@ -12,6 +12,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ToastrModule } from "ngx-toastr";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AuthModule } from "./features/auth/auth.module";
 import { environment } from '../environments/environment';
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { ApiInterceptor } from "./interceptors/api.interceptor";
@@ -33,7 +34,6 @@ import { AccessTokenInterceptor } from "./interceptors/access-token.interceptor"
         strictStateImmutability: true,
         strictActionImmutability: true,
         strictStateSerializability: true,
-        strictActionSerializability: true,
         strictActionWithinNgZone: true,
         strictActionTypeUniqueness: true,
       },
@@ -48,7 +48,8 @@ import { AccessTokenInterceptor } from "./interceptors/access-token.interceptor"
       maxOpened: 5,
       autoDismiss: true
     }),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    AuthModule
   ],
   providers: [
     {

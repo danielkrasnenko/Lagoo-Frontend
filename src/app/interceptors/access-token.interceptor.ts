@@ -20,7 +20,6 @@ export class AccessTokenInterceptor implements HttpInterceptor {
   constructor(
     private authDataService: AuthDataService,
     private router: Router,
-    private httpClient: HttpClient,
     private environmentService: EnvironmentService,
     private authHttpService: AuthHttpService
   ) {}
