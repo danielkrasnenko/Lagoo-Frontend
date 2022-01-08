@@ -8,5 +8,5 @@ export interface RegisterUserDto {
   confirmPassword?: string;
   externalAuthService?: ExternalAuthService;
   externalAuthServiceAccessToken?: string;
-  deviceId: string;
+  deviceId?: string;
 }

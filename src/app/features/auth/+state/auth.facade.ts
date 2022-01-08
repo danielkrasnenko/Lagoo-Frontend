@@ -4,7 +4,7 @@ import { AuthState } from "./auth.reducer";
 import * as AuthActions from './auth.actions';
 import * as AuthSelectors from './auth.selectors';
 import { GetExternalAuthServiceUserInfoParams } from "../models/external-auth-service-user-info";
-import { DeviceStorageService } from "../../../shared/shared-services/device/device-storage.service";
+import { DeviceDataStorageService } from "../../../shared/shared-services/device/device-data-storage.service";
 import { ToastrService } from "ngx-toastr";
 import { ExternalAuthService } from "../models/external-auth-service";
 import { ExternalAuthAim } from "../models/external-auth-aim";
@@ -16,49 +16,34 @@ export class AuthFacade {
 
   constructor(
     private store: Store<AuthState>,
-    private deviceStorageService: DeviceStorageService,
+    private deviceDataStorageService: DeviceDataStorageService,
     private toastr: ToastrService
   ) {}
 
   registerUser() {
-    try {
-      const deviceId = this.extractDeviceId();
-      this.store.dispatch(AuthActions.registerUser({ deviceId }));
-    }
-    catch (ex: any) {
-      this.toastr.show(ex.message);
-    }
+    this.store.dispatch(AuthActions.registerUser({ deviceId: this.deviceDataStorageService.getDeviceId() }));
   }
 
   loginUser() {
-    try {
-      const deviceId = this.extractDeviceId();
-      this.store.dispatch(AuthActions.loginUser({ deviceId }));
-    }
-    catch (ex: any) {
-      this.toastr.show(ex.message);
-    }
+    this.store.dispatch(AuthActions.loginUser({ deviceId: this.deviceDataStorageService.getDeviceId() }));
   }
 
   loginUserViaExternalAuthService(externalAuthService: ExternalAuthService, externalAuthServiceAccessToken: string) {
-    try {
-      const deviceId = this.extractDeviceId();
-
-      this.store.dispatch(AuthActions.loginUserViaExternalAuthService({
-        loginUserViaExternalAuthServiceDto: {
-          externalAuthService,
-          externalAuthServiceAccessToken,
-          deviceId
-        }
-      }));
-    }
-    catch (ex: any) {
-      this.toastr.show(ex.message);
-    }
+    this.store.dispatch(AuthActions.loginUserViaExternalAuthService({
+      loginUserViaExternalAuthServiceDto: {
+        externalAuthService,
+        externalAuthServiceAccessToken,
+        deviceId: this.deviceDataStorageService.getDeviceId()
+      }
+    }));
   }
 
   authenticateViaExternalAuthService(externalAuthAim: ExternalAuthAim, externalAuthService: ExternalAuthService) {
     this.store.dispatch(AuthActions.authenticateViaExternalAuthService({ externalAuthAim, externalAuthService }));
+  }
+
+  logout() {
+    this.store.dispatch(AuthActions.logout());
   }
 
   getExternalAuthServiceUserInfoForRegisterForm(getExternalAuthServiceUserInfoParams: GetExternalAuthServiceUserInfoParams) {
@@ -71,15 +56,5 @@ export class AuthFacade {
 
   clearLoginForm() {
     this.store.dispatch(AuthActions.clearLoginForm());
-  }
-
-  private extractDeviceId() {
-    const deviceId = this.deviceStorageService.getDeviceId();
-
-    if (!deviceId) {
-      throw new Error('Reload the page and log in again');
-    }
-
-    return deviceId;
   }
 }

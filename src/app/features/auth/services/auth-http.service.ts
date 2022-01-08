@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { AccessTokenData } from "../../../shared/shared-services/auth-data/models/access-token-data";
+import { HttpClient } from "@angular/common/http";
+import { StorageAccessTokenData } from "../../../shared/shared-services/auth-data/models/storage-access-token-data";
 import {
   ExternalAuthServiceUserInfo, ExternalAuthServiceUserInfoDto,
   GetExternalAuthServiceUserInfoParams
@@ -8,8 +8,7 @@ import {
 import { Observable } from "rxjs";
 import { AccessTokenDataDto } from "../models/dtos/access-token-data-dto";
 import { RegisterUserDto } from "../models/dtos/register-user-dto";
-import { AuthData } from "../../../shared/shared-services/auth-data/models/auth-data";
-import { AuthDataDto } from "../models/dtos/auth-data-dto";
+import { AuthData, AuthDataDto } from "../models/auth-data";
 import { LoginUserDto } from "../models/dtos/login-user-dto";
 import { LoginUserViaExternalAuthServiceDto } from "../models/dtos/login-user-via-external-auth-service-dto";
 import { RefreshAccessTokenDto } from "../models/dtos/refresh-access-token-dto";
@@ -32,7 +31,7 @@ export class AuthHttpService {
     return this.http.post<AuthDataDto>(`${this.apiEndpoint}/external-service/login`, loginUserViaExternalAuthServiceDto);
   }
 
-  refreshAccessToken(refreshAccessTokenDto: RefreshAccessTokenDto): Observable<AccessTokenData> {
+  refreshAccessToken(refreshAccessTokenDto: RefreshAccessTokenDto): Observable<StorageAccessTokenData> {
     return this.http.post<AccessTokenDataDto>(`${this.apiEndpoint}/refresh`, { refreshAccessTokenDto });
   }
 

@@ -16,6 +16,7 @@ import { RegisterUserDto } from "../models/dtos/register-user-dto";
 import { ExternalAuthService } from "../models/external-auth-service";
 import { buildPathToExternalAuthHandler } from "../models/external-auth-handling";
 import { LoginUserDto } from "../models/dtos/login-user-dto";
+import { DeviceDataStorageService } from "../../../shared/shared-services/device/device-data-storage.service";
 
 @Injectable()
 export class AuthEffects {
@@ -74,11 +75,28 @@ export class AuthEffects {
     )
   );
 
-  successAuthentication$ = createEffect(() =>
+  authenticationSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.registerUserSuccess, AuthActions.loginUserSuccess, AuthActions.loginUserViaExternalAuthServiceSuccess),
-      tap(({ authData }) =>{
-        this.authDataService.setAuthDataToStorage(authData);
+      tap(({ authData }) => {
+        this.deviceDataStorageService.setDeviceId(authData.deviceId);
+        this.authDataService.setAuthDataToStorage({
+          accessToken: authData.accessToken,
+          accessTokenExpiresAt: authData.accessTokenExpiresAt,
+          refreshToken: authData.refreshToken,
+          refreshTokenExpiresAt: authData.refreshTokenExpiresAt
+        });
+        this.router.navigate(['/']);
+      })
+    ),
+    { dispatch: false }
+  );
+
+  logout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.logout),
+      tap(() => {
+        this.authDataService.clearAuthDataFromStorage();
         this.router.navigate(['/']);
       })
     ),
@@ -141,6 +159,7 @@ export class AuthEffects {
     private router: Router,
     private authHttpService: AuthHttpService,
     private authDataService: AuthDataService,
+    private deviceDataStorageService: DeviceDataStorageService,
     private externalAuthDataStorageService: ExternalAuthDataStorageService,
     private toastr: ToastrService,
     private environmentService: EnvironmentService

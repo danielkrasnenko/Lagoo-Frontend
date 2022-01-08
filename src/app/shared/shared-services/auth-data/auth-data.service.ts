@@ -1,23 +1,23 @@
 import { Injectable } from "@angular/core";
 import { LocalStorageService } from "../local-storage/local-storage.service";
-import { AuthData } from "./models/auth-data";
+import { StorageAuthData } from "./models/storage-auth-data";
 import { LocalStorageKeys } from "../local-storage/models/local-storage-keys";
-import { AccessTokenData } from "./models/access-token-data";
+import { StorageAccessTokenData } from "./models/storage-access-token-data";
 
 @Injectable()
 export class AuthDataService {
   constructor(private localStorageService: LocalStorageService) {}
 
   getAuthDataFromStorage() {
-    return this.localStorageService.getItem<AuthData>(LocalStorageKeys.AuthData);
+    return this.localStorageService.getItem<StorageAuthData>(LocalStorageKeys.AuthData);
   }
 
-  setAuthDataToStorage(authData: AuthData) {
+  setAuthDataToStorage(authData: StorageAuthData) {
     this.localStorageService.setItem(LocalStorageKeys.AuthData, authData);
   }
 
   clearAuthDataFromStorage() {
-    this.localStorageService.clear();
+    this.localStorageService.removeItem(LocalStorageKeys.AuthData);
   }
 
   getAccessToken() {
@@ -28,7 +28,7 @@ export class AuthDataService {
     return this.getAuthDataFromStorage()?.refreshToken;
   }
 
-  updateAccessToken(accessTokenData: AccessTokenData) {
+  updateAccessTokenDataInStorage(accessTokenData: StorageAccessTokenData) {
     const authData = this.getAuthDataFromStorage();
 
     if (authData) {
@@ -39,7 +39,7 @@ export class AuthDataService {
     }
   }
 
-  accessTokenIsValid(authData?: AuthData) {
+  accessTokenIsValid(authData?: StorageAuthData) {
     if (!authData) {
       try {
         authData = this.extractAuthData();
@@ -52,7 +52,7 @@ export class AuthDataService {
     return !!authData.accessToken && +new Date(authData.accessTokenExpiresAt) - Date.now() > 0;
   }
 
-  refreshTokenIsValid(authData?: AuthData) {
+  refreshTokenIsValid(authData?: StorageAuthData) {
     if (!authData) {
       try {
         authData = this.extractAuthData();

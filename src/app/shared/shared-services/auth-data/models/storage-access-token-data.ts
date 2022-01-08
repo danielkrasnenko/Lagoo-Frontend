@@ -1,4 +1,4 @@
-export interface AccessTokenData {
+export interface StorageAccessTokenData {
   accessToken: string;
   accessTokenExpiresAt: string;
 }

@@ -3,7 +3,7 @@ import { LocalStorageService } from "../local-storage/local-storage.service";
 import { LocalStorageKeys } from "../local-storage/models/local-storage-keys";
 
 @Injectable()
-export class DeviceStorageService {
+export class DeviceDataStorageService {
   constructor(private localStorageService: LocalStorageService) {}
 
   getDeviceId() {

@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -16,11 +16,6 @@ import { environment } from '../environments/environment';
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { ApiInterceptor } from "./interceptors/api.interceptor";
 import { AccessTokenInterceptor } from "./interceptors/access-token.interceptor";
-import { AppInitializationService } from "./app-initialization.service";
-
-export function initializeApp(appInitializationService: AppInitializationService) {
-  return () => appInitializationService.initialize();
-}
 
 @NgModule({
   declarations: [
@@ -56,7 +51,6 @@ export function initializeApp(appInitializationService: AppInitializationService
     BrowserAnimationsModule
   ],
   providers: [
-    AppInitializationService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ApiInterceptor,
@@ -65,12 +59,6 @@ export function initializeApp(appInitializationService: AppInitializationService
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AccessTokenInterceptor,
-      multi: true
-    },
-    {
-      provide: APP_INITIALIZER,
-      deps: [AppInitializationService],
-      useFactory: initializeApp,
       multi: true
     }
   ],
