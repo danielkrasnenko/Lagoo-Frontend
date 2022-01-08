@@ -24,8 +24,8 @@ export class AuthDataService {
     return this.getAuthDataFromStorage()?.accessToken;
   }
 
-  getRefreshToken() {
-    return this.getAuthDataFromStorage()?.refreshToken;
+  getRefreshTokenValue() {
+    return this.getAuthDataFromStorage()?.refreshTokenValue;
   }
 
   updateAccessTokenDataInStorage(accessTokenData: StorageAccessTokenData) {
@@ -62,7 +62,7 @@ export class AuthDataService {
       }
     }
 
-    return !!authData.refreshToken && +new Date(authData.refreshTokenExpiresAt) - Date.now() > 0;
+    return !!authData.refreshTokenValue && +new Date(authData.refreshTokenExpiresAt) - Date.now() > 0;
   }
 
   private extractAuthData() {

@@ -35,7 +35,7 @@ export class AccessTokenInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
           if (authData && this.authDataService.refreshTokenIsValid(authData)) {
-            return this.tryRefreshAccessToken(authData.refreshToken, authData.accessToken).pipe(
+            return this.tryRefreshAccessToken(authData.refreshTokenValue, authData.accessToken).pipe(
               switchMap((accessTokenData: StorageAccessTokenData) =>
                 next.handle(this.attachAccessTokenToRequest(req, accessTokenData.accessToken)).pipe(
                   catchError(err => {

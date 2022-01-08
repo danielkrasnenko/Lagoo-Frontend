@@ -88,7 +88,7 @@ export class AuthEffects {
         this.authDataService.setAuthDataToStorage({
           accessToken: authData.accessToken,
           accessTokenExpiresAt: authData.accessTokenExpiresAt,
-          refreshToken: authData.refreshToken,
+          refreshTokenValue: authData.refreshTokenValue,
           refreshTokenExpiresAt: authData.refreshTokenExpiresAt
         });
         this.externalAuthDataStorageService.clearExternalAuthData();
@@ -119,6 +119,14 @@ export class AuthEffects {
         )
       )
     )
+  );
+
+  getExternalAuthServiceUserInfoForRegisterFormSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.getExternalAuthServiceUserInfoForRegisterFormSuccess),
+      tap(() => this.router.navigate(['/auth', 'register']))
+    ),
+    { dispatch: false }
   );
 
   authenticateViaExternalAuthService$ = createEffect(() =>

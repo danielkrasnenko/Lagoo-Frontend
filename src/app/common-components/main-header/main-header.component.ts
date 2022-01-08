@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, EventEmitter, Output } from "@angular/core";
 
 @Component({
   selector: 'app-main-header',
@@ -7,4 +7,10 @@ import { Component } from "@angular/core";
 })
 export class MainHeaderComponent {
   user = 'User';
+
+  @Output() logout = new EventEmitter();
+
+  onLogout() {
+    this.logout.emit();
+  }
 }

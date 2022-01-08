@@ -1,5 +1,5 @@
 <div class="d-flex flex-column w-fill h-fill">
-  <app-main-header></app-main-header>
+  <app-main-header (logout)="handleLogout()"></app-main-header>
   <div class="main-layout">
     <router-outlet></router-outlet>
   </div>

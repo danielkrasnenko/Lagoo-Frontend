@@ -1,7 +1,7 @@
 export interface AuthData {
   accessToken: string;
   accessTokenExpiresAt: string;
-  refreshToken: string;
+  refreshTokenValue: string;
   refreshTokenExpiresAt: string;
   deviceId: string;
 }
@@ -9,7 +9,7 @@ export interface AuthData {
 export interface AuthDataDto {
   accessToken: string;
   accessTokenExpiresAt: string;
-  refreshToken: string;
+  refreshTokenValue: string;
   refreshTokenExpiresAt: string;
   deviceId: string;
 }

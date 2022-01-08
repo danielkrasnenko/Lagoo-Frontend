@@ -8,5 +8,5 @@
   </div>
   <a *ngIf="user !== '/auth/login'" class="nav-item login-link" [routerLink]="['/auth', 'login']">Login</a>
   <a *ngIf="user !== '/auth/register'" class="nav-item register-link" [routerLink]="['/auth', 'register']">Register</a>
-  <a *ngIf="user !== ''" class="nav-item logout-link">Logout</a>
+  <a *ngIf="user !== ''" class="nav-item logout-link" (click)="onLogout()">Logout</a>
 </div>
