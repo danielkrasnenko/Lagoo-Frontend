@@ -1,0 +1,53 @@
+<div *ngIf="eventForm$ | async as eventForm" class="event-form-dialog flex-center">
+  <form [ngrxFormState]="eventForm" (ngSubmit)="submit(eventForm.value)" class="event-form">
+    <mat-form-field class="field-full-width" appearance="fill">
+      <mat-label>Name</mat-label>
+      <input type="text" matInput [ngrxFormControlState]="eventForm.controls.name">
+    </mat-form-field>
+
+    <mat-form-field class="field-full-width" appearance="fill">
+      <mat-label>Type</mat-label>
+      <select matNativeControl matInput required [ngrxFormControlState]="eventForm.controls.type">
+        <option *ngFor="let option of eventTypeOptions" [value]="option.value">
+          {{ option.label }}
+        </option>
+      </select>
+    </mat-form-field>
+
+    <mat-form-field class="field-full-width" appearance="fill">
+      <mat-label>Address</mat-label>
+      <input type="text" matInput [ngrxFormControlState]="eventForm.controls.address">
+    </mat-form-field>
+
+    <mat-form-field class="field-full-width" appearance="fill">
+      <mat-label>Comment</mat-label>
+      <textarea matInput [ngrxFormControlState]="eventForm.controls.comment"></textarea>
+    </mat-form-field>
+
+    <mat-form-field class="field-full-width" appearance="fill">
+      <mat-label>Begins at</mat-label>
+      <input type="datetime-local" matInput [ngrxFormControlState]="eventForm.controls.beginsAt">
+    </mat-form-field>
+
+    <mat-form-field class="field-full-width" appearance="fill">
+      <mat-label>Duration in minutes</mat-label>
+      <input
+        matInput
+        type="number"
+        [min]="1"
+        [max]="600"
+        [step]="1"
+        [ngrxFormControlState]="eventForm.controls.duration"
+      >
+    </mat-form-field>
+
+    <div class="m-t-10 m-b-20">
+      <mat-label class="m-r-10">Private</mat-label>
+      <mat-checkbox [ngrxFormControlState]="eventForm.controls.isPrivate"></mat-checkbox>
+    </div>
+
+    <button mat-stroked-button color="primary" type="submit">
+      Submit
+    </button>
+  </form>
+</div>

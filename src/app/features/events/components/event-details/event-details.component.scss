@@ -1,0 +1,19 @@
+.event-details {
+  padding: 10px;
+  position: relative;
+
+  .edit-btn {
+    position: absolute;
+    right: 30px;
+    top: 30px;
+  }
+
+  .event-section {
+    padding: 20px 30px;
+
+    &:not(:last-of-type) {
+      margin-bottom: 10px;
+      border-bottom: 1px solid grey;
+    }
+  }
+}

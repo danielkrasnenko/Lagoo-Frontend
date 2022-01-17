@@ -1,0 +1,44 @@
+.events {
+  .table, .header-row, .mat-row {
+    width: 100%;
+  }
+
+  .table {
+    display: table;
+    table-layout: fixed;
+  }
+
+  .mat-row .mat-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    cursor: pointer;
+  }
+
+  .mat-row:hover .mat-cell {
+    border-color: currentColor;
+  }
+
+  .mat-row {
+    cursor: pointer;
+  }
+
+  .delete-btn.mat-fab, .details-btn.mat-fab {
+    width: 35px;
+    height: 35px;
+
+    ::ng-deep {
+      .mat-button-wrapper {
+        padding: 0;
+      }
+
+      .mdi-delete {
+        line-height: 10px;
+      }
+    }
+  }
+
+  .event-private-input-block {
+    padding: 10px;
+    pointer-events: none;
+  }
+}

@@ -10,7 +10,7 @@ import { ToastrService } from "ngx-toastr";
 import { EnvironmentService } from "../../../shared/shared-services/environment/environment.service";
 import * as AuthActions from "./auth.actions";
 import * as AuthSelectors from "./auth.selectors";
-import { catchError, EMPTY, map, of, switchMap, tap, withLatestFrom } from "rxjs";
+import { catchError, map, of, switchMap, tap, withLatestFrom } from "rxjs";
 import { AuthHttpService } from "../services/auth-http.service";
 import { RegisterUserDto } from "../models/dtos/register-user-dto";
 import { ExternalAuthService } from "../models/external-auth-service";
@@ -163,10 +163,6 @@ export class AuthEffects {
     { dispatch: false }
   );
 
-  private showError(message: string) {
-    this.toastr.error(message, 'Error' );
-  }
-
   constructor(
     private actions$: Actions,
     private store: Store,
@@ -178,4 +174,8 @@ export class AuthEffects {
     private toastr: ToastrService,
     private environmentService: EnvironmentService
   ) {}
+
+  private showError(message: string) {
+    this.toastr.error(message, 'Error' );
+  }
 }

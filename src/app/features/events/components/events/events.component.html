@@ -1,0 +1,74 @@
+<div class="events" *ngIf="events$ | async as events">
+  <div class="flex-center m-t-10 m-b-20">
+    <button mat-stroked-button color="primary" (click)="handleOpenCreateNewEventDialog()">Create new event</button>
+  </div>
+  <mat-table mat-table [dataSource]="events" class="mat-elevation-z8 table">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let event">{{ event.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let event">{{ event.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef>Type</th>
+      <td mat-cell *matCellDef="let event">{{ getEventTypeLabel(event.type) }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="address">
+      <th mat-header-cell *matHeaderCellDef>Address</th>
+      <td mat-cell *matCellDef="let event">{{ event.address }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="isPrivate">
+      <th mat-header-cell *matHeaderCellDef>Private</th>
+      <td mat-cell *matCellDef="let event">
+        <input type="checkbox" [checked]="event.isPrivate" (change)="handleToggleEventPrivate(event)">
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="beginsAt">
+      <th mat-header-cell *matHeaderCellDef>Beginning date</th>
+      <td mat-cell *matCellDef="let event">{{ event.beginsAt | date: 'd MMM yyyy, HH:mm' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="duration">
+      <th mat-header-cell *matHeaderCellDef>Duration (min)</th>
+      <td mat-cell *matCellDef="let event">{{ event.duration }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="createdAt">
+      <th mat-header-cell *matHeaderCellDef>Creation date</th>
+      <td mat-cell *matCellDef="let event">{{ event.createdAt | date: 'd MMM yyyy, HH:mm' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let event">
+        <button
+          mat-fab
+          color="accent"
+          class="details-btn m-r-15"
+          (click)="handleShowEventDetails($event, event.id)"
+        >
+          <i class="mdi mdi-paper"></i>
+        </button>
+        <button
+          mat-fab
+          color="primary"
+          class="delete-btn"
+          (click)="handleDeleteEvent($event, event.id)"
+        >
+          <i class="mdi mdi-delete"></i>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns" class="header-row"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </mat-table>
+  <div *ngIf="eventsCount$ | async as count" class="m-t-30">Count: {{ count }}</div>
+</div>

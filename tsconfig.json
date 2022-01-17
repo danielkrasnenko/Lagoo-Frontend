@@ -23,7 +23,8 @@
       "dom"
     ],
     "paths": {
-      "@app/utils": ["src/app/shared/shared-utils"]
+      "@app/utils": ["src/app/shared/shared-utils"],
+      "@app/models": ["src/app/shared/shared-models"]
     }
   },
   "angularCompilerOptions": {

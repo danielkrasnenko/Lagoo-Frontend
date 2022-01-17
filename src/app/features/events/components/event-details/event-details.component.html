@@ -1,0 +1,37 @@
+<div class="event-details" *ngIf="event$ | async as event">
+  <button
+    mat-fab
+    color="primary"
+    class="edit-btn"
+    (click)="handleOpenEditEventDialog(event)"
+  >
+    <i class="mdi mdi-pencil"></i>
+  </button>
+  <section class="event-section flex-column-middle">
+    <h3>Name</h3>
+    <p>{{ event.name }}</p>
+  </section>
+  <section class="event-section flex-column-middle">
+    <h3>Type</h3>
+    <p>{{ eventTypeToLabelMap[event.type] }}</p>
+  </section>
+  <section class="event-section flex-column-middle">
+    <h3>Address</h3>
+    <p>{{ event.address }}</p>
+  </section>
+  <section class="event-section flex-column-middle">
+    <h3>Comment</h3>
+    <p>{{ event.comment }}</p>
+  </section>
+  <section class="event-section flex-column-middle">
+    <h3>It's {{ event.isPrivate ? 'Private' : 'Public' }}</h3>
+  </section>
+  <section class="event-section flex-column-middle">
+    <h3>Beginning date</h3>
+    <span>{{ event.beginsAt | date: 'd MMM yyyy, HH:mm' }}</span>
+  </section>
+  <section class="event-section flex-column-middle">
+    <h3>Duration in minutes</h3>
+    <span>{{ event.duration }}</span>
+  </section>
+</div>
