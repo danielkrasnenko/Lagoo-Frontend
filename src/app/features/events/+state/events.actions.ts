@@ -40,6 +40,14 @@ export const deleteEventSuccess = createAction('[Events] Delete Event Success');
 
 export const deleteEventFail = createAction('[Events] Delete Event Fail', props<{ error: HttpErrorResponse }>())
 
+export const applyEventUpdateFromSignalR = createAction('[Events] Apply Event Update from SignalR', props<{ updatedEvent: Event }>());
+
+export const applyEventDeletionFromSignalR = createAction('[Events] Apply Event Deletion from SignalR', props<{ id: number }>());
+
+export const applySelectedEventUpdateFromSignalR = createAction('[Events] Apply Selected Event Update from SignalR', props<{ updatedEvent: Event }>());
+
+export const applySelectedEventDeletionFromSignalR = createAction('[Events] Apply Selected Event Deletion from SignalR', props<{ id: number }>());
+
 export const updateGetEventsParams = createAction('[Events] Update Get Events Params', props<{ params: GetEventsParams }>());
 
 export const fillEventFormWithData = createAction('[Events] Fill Event Form with Data', props<{ event: Event }>());

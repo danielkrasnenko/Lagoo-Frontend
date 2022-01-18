@@ -7,7 +7,7 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'news-feed'
+    redirectTo: 'events'
   },
   {
     path: '',

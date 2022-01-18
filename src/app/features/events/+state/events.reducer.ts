@@ -65,6 +65,34 @@ export const reducer = createReducer(
       ...params
     }
   })),
+  on(EventsActions.applyEventUpdateFromSignalR, (state, { updatedEvent }) => ({
+    ...state,
+    events: state.events.map(event => event.id === updatedEvent.id
+      ? ({
+        id: event.id,
+        name: updatedEvent.name,
+        type: updatedEvent.type,
+        address: updatedEvent.address,
+        isPrivate: updatedEvent.isPrivate,
+        duration: updatedEvent.duration,
+        beginsAt: updatedEvent.beginsAt,
+        createdAt: updatedEvent.createdAt
+      })
+      : event
+    )
+  })),
+  on(EventsActions.applyEventDeletionFromSignalR, (state, { id }) => ({
+    ...state,
+    events: state.events.filter(event => event.id !== id)
+  })),
+  on(EventsActions.applySelectedEventUpdateFromSignalR, (state, { updatedEvent }) => ({
+    ...state,
+    selectedEvent: state.selectedEvent?.id === updatedEvent.id ? updatedEvent : state.selectedEvent
+  })),
+  on(EventsActions.applySelectedEventDeletionFromSignalR, (state, { id }) => ({
+    ...state,
+    selectedEvent: state.selectedEvent?.id === id ? undefined : state.selectedEvent
+  })),
   on(EventsActions.fillEventFormWithData, (state, { event }) => ({
     ...state,
     eventForm: updateGroup(state.eventForm, {

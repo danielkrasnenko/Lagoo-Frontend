@@ -20,6 +20,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatSliderModule } from "@angular/material/slider";
 import { MatTableModule } from "@angular/material/table";
 import { MatDialogModule } from "@angular/material/dialog";
+import { EventsSignalRService } from "./services/events-signal-r.service";
 
 @NgModule({
   declarations: [
@@ -43,6 +44,6 @@ import { MatDialogModule } from "@angular/material/dialog";
     MatSliderModule,
     MatTableModule,
   ],
-  providers: [EventsHttpService, EventsFacade]
+  providers: [EventsHttpService, EventsFacade, EventsSignalRService]
 })
 export class EventsModule {}

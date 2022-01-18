@@ -10,6 +10,7 @@ import { EventFormDialogComponent } from "../event-form-dialog/event-form-dialog
 import { CreateEventDto } from "../../models/event";
 import { unbox } from "ngrx-forms";
 import { EventType, eventTypeToLabelMap } from "../../models/event-type";
+import { EventsSignalRService } from "../../services/events-signal-r.service";
 
 @Component({
   selector: 'app-events',
@@ -24,7 +25,12 @@ export class EventsComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['id', 'name', 'type', 'address', 'isPrivate', 'beginsAt', 'duration', 'createdAt', 'delete'];
   eventTypeToLabelMap = eventTypeToLabelMap;
 
-  constructor(private eventsFacade: EventsFacade, private router: Router, private dialog: MatDialog) {
+  constructor(
+    private eventsFacade: EventsFacade,
+    private router: Router,
+    private dialog: MatDialog,
+    private eventsSignalRService: EventsSignalRService
+  ) {
     this.events$ = eventsFacade.events$;
     this.eventsParams$ = eventsFacade.getEventsParams$;
     this.eventsCount$ = eventsFacade.eventsCount$;
@@ -32,9 +38,11 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.eventsFacade.loadEvents();
+    this.eventsSignalRService.addEventsListeners();
   }
 
   ngOnDestroy() {
+    this.eventsSignalRService.removeListeners();
     this.eventsFacade.clearEvents();
   }
 

@@ -41,6 +41,22 @@ export class EventsFacade {
     this.store.dispatch(EventsActions.deleteEvent({ id }));
   }
 
+  applyEventUpdateFromSignalR(updatedEvent: Event) {
+    this.store.dispatch(EventsActions.applyEventUpdateFromSignalR({ updatedEvent }))
+  }
+
+  applyEventDeletionFromSignalR(id: number) {
+    this.store.dispatch(EventsActions.applyEventDeletionFromSignalR({ id }));
+  }
+
+  applySelectedEventUpdateFromSignalR(updatedEvent: Event) {
+    this.store.dispatch(EventsActions.applySelectedEventUpdateFromSignalR({ updatedEvent }))
+  }
+
+  applySelectedEventDeletionFromSignalR(id: number) {
+    this.store.dispatch(EventsActions.applySelectedEventDeletionFromSignalR({ id }));
+  }
+
   updateGetEventsParams(params: GetEventsParams) {
     this.store.dispatch(EventsActions.updateGetEventsParams({ params }))
   }

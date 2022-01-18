@@ -15,7 +15,7 @@ import { RefreshAccessTokenDto } from "../models/dtos/refresh-access-token-dto";
 
 @Injectable()
 export class AuthHttpService {
-  private apiEndpoint = 'api/accounts/auth';
+  private readonly apiEndpoint = 'api/accounts/auth';
 
   constructor(private http: HttpClient) {}
 

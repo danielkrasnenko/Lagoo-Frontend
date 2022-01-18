@@ -9,6 +9,7 @@ import { EventForm } from "../../models/event-form";
 import { EventFormDialogData } from "../../models/event-form-dialog-data";
 import { unbox } from "ngrx-forms";
 import { eventTypeToLabelMap } from "../../models/event-type";
+import { EventsSignalRService } from "../../services/events-signal-r.service";
 
 @Component({
   selector: 'app-event-details',
@@ -20,7 +21,12 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
 
   eventTypeToLabelMap = eventTypeToLabelMap;
 
-  constructor(private eventsFacade: EventsFacade, private route: ActivatedRoute, private dialog: MatDialog) {
+  constructor(
+    private eventsFacade: EventsFacade,
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private eventsSignalRService: EventsSignalRService
+  ) {
     this.event$ = eventsFacade.selectedEvent$;
   }
 
@@ -29,9 +35,12 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     if (id) {
       this.eventsFacade.loadSelectedEvent(+id);
     }
+
+    this.eventsSignalRService.addSelectedEventListeners();
   }
 
   ngOnDestroy() {
+    this.eventsSignalRService.removeListeners();
     this.eventsFacade.clearSelectedEvent();
   }
 

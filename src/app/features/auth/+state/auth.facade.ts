@@ -5,7 +5,6 @@ import * as AuthActions from './auth.actions';
 import * as AuthSelectors from './auth.selectors';
 import { GetExternalAuthServiceUserInfoParams } from "../models/external-auth-service-user-info";
 import { DeviceDataStorageService } from "../../../shared/shared-services/device/device-data-storage.service";
-import { ToastrService } from "ngx-toastr";
 import { ExternalAuthService } from "../models/external-auth-service";
 import { ExternalAuthAim } from "../models/external-auth-aim";
 
@@ -16,8 +15,7 @@ export class AuthFacade {
 
   constructor(
     private store: Store<AuthState>,
-    private deviceDataStorageService: DeviceDataStorageService,
-    private toastr: ToastrService
+    private deviceDataStorageService: DeviceDataStorageService
   ) {}
 
   registerUser() {

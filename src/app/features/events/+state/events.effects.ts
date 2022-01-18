@@ -100,6 +100,46 @@ export class EventsEffects {
     )
   );
 
+  applyEventDeletionFromSignalR$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EventsActions.applyEventDeletionFromSignalR),
+      withLatestFrom(this.store.select(EventsSelectors.getEvents), ({ id }, events) => ({ deletedEventId: id, events })),
+      tap(({ deletedEventId, events }) => {
+        if (!!events.find(event => event.id === deletedEventId)) {
+          this.toastr.info(`Event with an ID ${deletedEventId} was deleted`);
+        }
+      })
+    ),
+    { dispatch: false }
+  );
+
+  applySelectedEventUpdateFromSignalR$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EventsActions.applySelectedEventUpdateFromSignalR),
+      withLatestFrom(this.store.select(EventsSelectors.getSelectedEvent), ({ updatedEvent }, selectedEvent) => ({ updatedEvent, selectedEvent })),
+      tap(({ updatedEvent, selectedEvent }) => {
+        if (updatedEvent.id === selectedEvent?.id) {
+          this.toastr.info('Event has been updated');
+        }
+      })
+    ),
+    { dispatch: false }
+  );
+
+  applySelectedEventDeletionFromSignalR$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EventsActions.applySelectedEventDeletionFromSignalR),
+      withLatestFrom(this.store.select(EventsSelectors.getSelectedEvent), ({ id }, selectedEvent) => ({ deletedEventId: id, selectedEvent })),
+      tap(({ deletedEventId, selectedEvent }) => {
+        if (deletedEventId === selectedEvent?.id) {
+          this.toastr.info('Event has been deleted');
+          this.router.navigate(['/events']);
+        }
+      })
+    ),
+    { dispatch: false }
+  );
+
   // Reload events when any of params has been updated
   updateGetEventsParams$ = createEffect(() =>
     this.actions$.pipe(

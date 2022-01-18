@@ -7,7 +7,7 @@ import { CreateEventDto, Event, EventDto, UpdateEventDto, UpdateEventPartiallyDt
 
 @Injectable()
 export class EventsHttpService {
-  private apiEndpoint = '/api/events';
+  private readonly apiEndpoint = '/api/events';
 
   constructor(private http: HttpClient) {}
 
