@@ -4,11 +4,10 @@ import { Store } from "@ngrx/store";
 import { ToastrService } from "ngx-toastr";
 import * as EventsActions from './events.actions';
 import * as EventsSelectors from './events.selectors';
-import { catchError, map, mapTo, of, switchMap, tap, withLatestFrom } from "rxjs";
+import { catchError, distinctUntilChanged, map, mapTo, of, pairwise, switchMap, tap, withLatestFrom } from "rxjs";
 import { EventsHttpService } from "../services/events-http.service";
-import { CreateEventDto, UpdateEventDto } from "../models/event";
-import { unbox } from "ngrx-forms";
 import { Router } from "@angular/router";
+import { EventsSignalRService } from "../services/events-signal-r.service";
 
 @Injectable()
 export class EventsEffects {
@@ -52,7 +51,7 @@ export class EventsEffects {
   createEventSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EventsActions.createEventSuccess),
-      tap(({ event }) => this.router.navigate(['/events', event.id])),
+      tap(({ event }) => this.router.navigate(['/events', event.id, 'details'])),
       mapTo(EventsActions.clearEventForm())
     )
   );
@@ -62,7 +61,7 @@ export class EventsEffects {
       ofType(EventsActions.updateEvent),
       switchMap(({ id, updateEventDto }) =>
         this.eventsHttpService.updateEvent(id, updateEventDto).pipe(
-          map(event => EventsActions.updateEventSuccess({ event })),
+          map(updatedEvent => EventsActions.updateEventSuccess({ updatedEvent })),
           catchError(error => of(EventsActions.updateEventFail({ error })))
         )
       )
@@ -72,6 +71,7 @@ export class EventsEffects {
   updateEventSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EventsActions.updateEventSuccess),
+      tap(({ updatedEvent }) => this.eventsSignalRService.notifyOthersAboutUpdate(updatedEvent)),
       mapTo(EventsActions.clearEventForm())
     )
   );
@@ -81,11 +81,19 @@ export class EventsEffects {
       ofType(EventsActions.updateEventPartially),
       switchMap(({ id, updateEventPartiallyDto }) =>
         this.eventsHttpService.updateEventPartially(id, updateEventPartiallyDto).pipe(
-          map(event => EventsActions.updateEventPartiallySuccess({ event })),
+          map(updatedEvent => EventsActions.updateEventPartiallySuccess({ updatedEvent })),
           catchError(error => of(EventsActions.updateEventPartiallyFail({ error })))
         )
       )
     )
+  );
+
+  updateEventPartiallySuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EventsActions.updateEventPartiallySuccess),
+      tap(({ updatedEvent }) => this.eventsSignalRService.notifyOthersAboutUpdate(updatedEvent))
+    ),
+    { dispatch: false }
   );
 
   deleteEvent$ = createEffect(() =>
@@ -93,11 +101,19 @@ export class EventsEffects {
       ofType(EventsActions.deleteEvent),
       switchMap(({ id }) =>
         this.eventsHttpService.deleteEvent(id).pipe(
-          map(() => EventsActions.deleteEventSuccess()),
+          map(() => EventsActions.deleteEventSuccess({ id })),
           catchError(error => of(EventsActions.deleteEventFail({ error })))
         )
       )
     )
+  );
+
+  deleteEventSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EventsActions.deleteEventSuccess),
+      tap(({ id }) => this.eventsSignalRService.notifyOthersAboutDeletion(id))
+    ),
+    { dispatch: false }
   );
 
   applyEventDeletionFromSignalR$ = createEffect(() =>
@@ -168,7 +184,8 @@ export class EventsEffects {
     private store: Store,
     private toastr: ToastrService,
     private router: Router,
-    private eventsHttpService: EventsHttpService
+    private eventsHttpService: EventsHttpService,
+    private eventsSignalRService: EventsSignalRService
   ) {}
 
   private showError(message: string) {

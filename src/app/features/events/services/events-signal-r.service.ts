@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import * as SignalR from "@microsoft/signalr";
 import { HubConnection } from "@microsoft/signalr";
-import { Event } from "../models/event";
+import { EventDto } from "../models/event";
 import { EventsFacade } from "../+state/events.facade";
-import { EventsHubMethod } from "../models/events-hub-method";
+import { EventsHubClientMethods, EventsHubServerMethods } from "../models/events-hub-methods";
 
 @Injectable()
 export class EventsSignalRService {
@@ -22,33 +22,43 @@ export class EventsSignalRService {
   }
 
   addEventsListeners() {
-    this.connection.on(EventsHubMethod.Updated, this.handleEventUpdate);
-    this.connection.on(EventsHubMethod.Deleted, this.handleEventDeletion);
+    this.connection.on(EventsHubClientMethods.TakeActionOnUpdate, this.handleEventUpdate);
+    this.connection.on(EventsHubClientMethods.TakeActionOnDelete, this.handleEventDeletion);
   }
 
   addSelectedEventListeners() {
-    this.connection.on(EventsHubMethod.Updated, this.handleSelectedEventUpdate);
-    this.connection.on(EventsHubMethod.Deleted, this.handleSelectedEventDeletion);
+    this.connection.on(EventsHubClientMethods.TakeActionOnUpdate, this.handleSelectedEventUpdate);
+    this.connection.on(EventsHubClientMethods.TakeActionOnDelete, this.handleSelectedEventDeletion);
   }
 
   removeListeners() {
-    this.connection.off(EventsHubMethod.Updated);
-    this.connection.off(EventsHubMethod.Deleted);
+    this.connection.off(EventsHubClientMethods.TakeActionOnUpdate);
+    this.connection.off(EventsHubClientMethods.TakeActionOnDelete);
   }
 
-  private handleEventUpdate(event: Event) {
+  notifyOthersAboutUpdate(eventDto: EventDto) {
+    return this.connection.invoke(EventsHubServerMethods.NotifyOthersAboutUpdateAsync, eventDto)
+      .catch(err => console.error(err));
+  }
+
+  notifyOthersAboutDeletion(id: number) {
+    return this.connection.invoke(EventsHubServerMethods.NotifyOthersAboutDeletionAsync, id)
+      .catch(err => console.error(err));
+  }
+
+  private handleEventUpdate = (event: EventDto) => {
     this.eventsFacade.applyEventUpdateFromSignalR(event);
   }
 
-  private handleSelectedEventUpdate(event: Event) {
+  private handleSelectedEventUpdate = (event: EventDto) => {
     this.eventsFacade.applySelectedEventUpdateFromSignalR(event);
   }
 
-  private handleEventDeletion(id: number) {
+  private handleEventDeletion = (id: number) => {
     this.eventsFacade.applyEventDeletionFromSignalR(id)
   }
 
-  private handleSelectedEventDeletion(id: number) {
+  private handleSelectedEventDeletion = (id: number) => {
     this.eventsFacade.applySelectedEventDeletionFromSignalR(id)
   }
 }

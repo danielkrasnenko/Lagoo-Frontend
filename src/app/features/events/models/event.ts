@@ -7,7 +7,7 @@ export interface Event {
   address: string;
   comment: string;
   isPrivate: boolean;
-  duration: number;
+  duration: string;
   beginsAt: string;
   createdAt: string;
   lastModifiedAt: string;
@@ -20,7 +20,7 @@ export interface EventDto {
   address: string;
   comment: string;
   isPrivate: boolean;
-  duration: number;
+  duration: string;
   beginsAt: string;
   createdAt: string;
   lastModifiedAt: string;
@@ -32,7 +32,7 @@ export interface CreateEventDto {
   address: string;
   comment: string;
   isPrivate: boolean;
-  duration: number;
+  duration: string;
   beginsAt: string;
 }
 
@@ -42,7 +42,7 @@ export interface UpdateEventDto {
   address: string;
   comment: string;
   isPrivate: boolean;
-  duration: number;
+  duration: string;
   beginsAt: string;
 }
 
@@ -52,6 +52,6 @@ export interface UpdateEventPartiallyDto {
   address?: string;
   comment?: string;
   isPrivate?: boolean;
-  duration?: number;
+  duration?: string;
   beginsAt?: string;
 }

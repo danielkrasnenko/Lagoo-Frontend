@@ -11,8 +11,8 @@ export interface GetEventsParams {
 }
 
 enum GetEventsSortBy {
-  Name = 1,
-  Duration = 2,
-  BeginsAt = 3,
-  CreatedAt = 4
+  Name = 'name',
+  Duration = 'duration',
+  BeginsAt = 'beginsAt',
+  CreatedAt = 'createdAt'
 }

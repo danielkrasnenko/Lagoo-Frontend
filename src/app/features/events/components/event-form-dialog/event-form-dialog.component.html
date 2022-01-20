@@ -30,12 +30,10 @@
     </mat-form-field>
 
     <mat-form-field class="field-full-width" appearance="fill">
-      <mat-label>Duration in minutes</mat-label>
+      <mat-label>Duration</mat-label>
       <input
         matInput
-        type="number"
-        [min]="1"
-        [max]="600"
+        type="time"
         [step]="1"
         [ngrxFormControlState]="eventForm.controls.duration"
       >

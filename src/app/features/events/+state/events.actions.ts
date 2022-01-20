@@ -24,19 +24,19 @@ export const createEventFail = createAction('[Events] Create Event Fail', props<
 
 export const updateEvent = createAction('[Events] Update Event', props<{ id: number, updateEventDto: UpdateEventDto }>());
 
-export const updateEventSuccess = createAction('[Events] Update Event Success', props<{ event: Event }>());
+export const updateEventSuccess = createAction('[Events] Update Event Success', props<{ updatedEvent: Event }>());
 
 export const updateEventFail = createAction('[Events] Update Event Fail', props<{ error: HttpErrorResponse }>());
 
 export const updateEventPartially = createAction('[Events] Update Event Partially', props<{ id: number, updateEventPartiallyDto: UpdateEventPartiallyDto }>());
 
-export const updateEventPartiallySuccess = createAction('[Events] Update Event Partially Success', props<{ event: Event }>());
+export const updateEventPartiallySuccess = createAction('[Events] Update Event Partially Success', props<{ updatedEvent: Event }>());
 
 export const updateEventPartiallyFail = createAction('[Events] Update Event Partially Fail', props<{ error: HttpErrorResponse }>());
 
 export const deleteEvent = createAction('[Events] Delete Event', props<{ id: number }>())
 
-export const deleteEventSuccess = createAction('[Events] Delete Event Success');
+export const deleteEventSuccess = createAction('[Events] Delete Event Success', props<{ id: number }>());
 
 export const deleteEventFail = createAction('[Events] Delete Event Fail', props<{ error: HttpErrorResponse }>())
 

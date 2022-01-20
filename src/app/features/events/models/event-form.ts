@@ -10,5 +10,5 @@ export interface EventForm {
   comment: string;
   isPrivate: boolean;
   beginsAt: string;
-  duration: number;
+  duration: string;
 }

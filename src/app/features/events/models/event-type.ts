@@ -1,14 +1,14 @@
 import { Option } from "@app/models";
 
 export enum EventType {
-  Ceremony = 1,
-  Convention = 2,
-  Festival = 3,
-  Happening = 4,
-  MediaEvent = 5,
-  Party = 6,
-  SportingEvent = 7,
-  VirtualEvent = 8
+  Ceremony = 'ceremony',
+  Convention = 'convention',
+  Festival = 'festival',
+  Happening = 'happening',
+  MediaEvent = 'mediaEvent',
+  Party = 'party',
+  SportingEvent = 'sportingEvent',
+  VirtualEvent = 'virtualEvent'
 }
 
 export const eventTypeToLabelMap: Record<EventType, string> = {
@@ -22,7 +22,7 @@ export const eventTypeToLabelMap: Record<EventType, string> = {
   [EventType.VirtualEvent]: 'Virtual Event'
 }
 
-export const eventTypeOptions: Option<number>[] = [
+export const eventTypeOptions: Option<string>[] = [
   {
     label: eventTypeToLabelMap[EventType.Ceremony],
     value: EventType.Ceremony

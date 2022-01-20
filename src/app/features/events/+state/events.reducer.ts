@@ -24,7 +24,7 @@ const eventFormInitialState = createFormGroupState<EventForm>(EVENT_FORM_ID, {
   address: '',
   comment: '',
   isPrivate: false,
-  duration: 1,
+  duration: '00:00:00',
   beginsAt: ''
 });
 
@@ -57,6 +57,30 @@ export const reducer = createReducer(
   on(EventsActions.loadSelectedEventSuccess, (state, { event }) => ({
     ...state,
     selectedEvent: event
+  })),
+  on(EventsActions.updateEventSuccess, (state, { updatedEvent }) => ({
+    ...state,
+    selectedEvent: updatedEvent
+  })),
+  on(EventsActions.updateEventPartiallySuccess, (state, { updatedEvent }) => ({
+    ...state,
+    events: state.events.map(event => event.id === updatedEvent.id
+      ? ({
+        id: event.id,
+        name: updatedEvent.name,
+        type: updatedEvent.type,
+        address: updatedEvent.address,
+        isPrivate: updatedEvent.isPrivate,
+        duration: updatedEvent.duration,
+        beginsAt: updatedEvent.beginsAt,
+        createdAt: updatedEvent.createdAt
+      })
+      : event
+    )
+  })),
+  on(EventsActions.deleteEventSuccess, (state, { id }) => ({
+    ...state,
+    events: state.events.filter(event =>  event.id !== id)
   })),
   on(EventsActions.updateGetEventsParams, (state, { params }) => ({
     ...state,

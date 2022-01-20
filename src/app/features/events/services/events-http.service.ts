@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
 import { GetEventsParams } from "../models/get-events-params";
 import { HttpClient } from "@angular/common/http";
-import { GetTableEvents, GetTableEventsDto, TableEvent, TableEventDto } from "../models/table-event";
+import { GetTableEvents, GetTableEventsDto } from "../models/table-event";
 import { Observable } from "rxjs";
 import { CreateEventDto, Event, EventDto, UpdateEventDto, UpdateEventPartiallyDto } from "../models/event";
 
 @Injectable()
 export class EventsHttpService {
-  private readonly apiEndpoint = '/api/events';
+  private readonly apiEndpoint = 'api/events';
 
   constructor(private http: HttpClient) {}
 

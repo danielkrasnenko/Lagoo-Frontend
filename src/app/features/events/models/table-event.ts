@@ -11,7 +11,7 @@ export interface TableEvent {
   type: EventType;
   address: string;
   isPrivate: boolean;
-  duration: number;
+  duration: string;
   beginsAt: string;
   createdAt: string;
 }
@@ -27,7 +27,7 @@ export interface TableEventDto {
   type: EventType;
   address: string;
   isPrivate: boolean;
-  duration: number;
+  duration: string;
   beginsAt: string;
   createdAt: string;
 }
