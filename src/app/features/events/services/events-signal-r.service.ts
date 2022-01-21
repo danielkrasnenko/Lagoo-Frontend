@@ -13,6 +13,7 @@ export class EventsSignalRService {
   constructor(private eventsFacade: EventsFacade) {
     this.connection = new SignalR.HubConnectionBuilder()
       .withUrl(this.hubApiUrl)
+      .withAutomaticReconnect()
       .build();
 
     this.connection
