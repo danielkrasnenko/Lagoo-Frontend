@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  API_URL: 'http://localhost:5000',
+  API_URL: 'http://localhost:8000',
   APP_URL: 'http://localhost:4200',
   externalAuthServices: {
     facebook:{

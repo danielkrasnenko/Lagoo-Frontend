@@ -147,7 +147,7 @@ export class EventsEffects {
           EventsActions.updateEventPartiallyFail,
           EventsActions.deleteEventFail
         ),
-        tap(({ error }) => this.showError(error.message))
+        tap(({ error }) => this.showError(error.error[0]))
       ),
     { dispatch: false }
   );

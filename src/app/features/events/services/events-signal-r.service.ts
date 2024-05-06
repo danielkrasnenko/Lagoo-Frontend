@@ -7,7 +7,7 @@ import { EventsHubClientMethods, EventsHubServerMethods } from "../models/events
 
 @Injectable()
 export class EventsSignalRService {
-  private readonly hubApiUrl = 'http://localhost:5000/events-hub';
+  private readonly hubApiUrl = 'http://localhost:8000/events-hub';
   private connection: HubConnection;
 
   constructor(private eventsFacade: EventsFacade) {

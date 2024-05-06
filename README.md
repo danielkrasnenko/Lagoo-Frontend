@@ -6,9 +6,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Clone repository to a folder
 
-Execute `npm i` for get dependencies
+Execute `npm i` to install dependencies
 
-Run [Lagoo Backend](https://github.com/Zilfatto/Lagoo-Backend) project
+Run [Lagoo Backend](https://github.com/danielkrasnenko/Lagoo-Backend) project
 
 Run `ng serve` for a dev server.
 

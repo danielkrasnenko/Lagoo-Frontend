@@ -158,7 +158,7 @@ export class AuthEffects {
         AuthActions.loginUserFail,
         AuthActions.loginUserViaExternalAuthServiceFail,
         AuthActions.getExternalAuthServiceUserInfoForRegisterFormFail),
-      tap(({ error }) => this.showError(error.message))
+      tap(({ error }) => this.showError(error.error[0]))
     ),
     { dispatch: false }
   );

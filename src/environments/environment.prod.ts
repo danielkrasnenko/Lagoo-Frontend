@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  API_URL: 'https://api.www.lagoo.com',
+  API_URL: 'https://api.lagoo.com',
   APP_URL: 'https://www.lagoo.com',
   externalAuthServices: {
     facebook:{
