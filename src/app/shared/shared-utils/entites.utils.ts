@@ -22,8 +22,8 @@ export const patchEntityWithIdInArray = <T extends WithId>(entities: T[], outdat
 export const patchEntityInArray = <T extends object>(entities: T[], attributes: Partial<T>, match: (entity: T) => boolean) => {
   return entities.map((entity) => (match(entity) ? { ...entity, ...attributes } : entity));
 };
-export const patchEntityDeeplyInArray = <T extends object>(entities: T[], attributes: RecursivePartial<T>, match: (entity: T) => boolean) => {
-  return entities.map((entity) => (match(entity) ? patchEntityDeeply(entity, attributes) : entity));
+export const patchEntityRecursivelyInArray = <T extends object>(entities: T[], attributes: RecursivePartial<T>, match: (entity: T) => boolean) => {
+  return entities.map((entity) => (match(entity) ? patchEntityRecursively(entity, attributes) : entity));
 };
 // Delete entity from an array of entities of the same type
 export const deleteEntityWithIdFromArray = <T extends WithId>(entities: T[], entityToDelete: T) => entities.filter((entity) => entity.id !== entityToDelete.id);
@@ -41,13 +41,13 @@ export const replaceEntityInArray = <T>(entities: T[], replacement: T, match: (e
 export const updateEntity = <T extends object>(outdatedEntity: T, updatedEntity: T) => ({ ...outdatedEntity, ...updatedEntity });
 // Patch an entity in an immutable way
 export const patchEntity = <T extends object>(outdatedEntity: T, attributes: Partial<T>) => ({ ...outdatedEntity, ...attributes });
-// Patch an entity deeply
-export const patchEntityDeeply = <T>(entity: T, attributes: RecursivePartial<T>) => {
+// Patch an entity recursively
+export const patchEntityRecursively = <T>(entity: T, attributes: RecursivePartial<T>) => {
   return {
     ...entity,
     ...extractKeys(attributes).reduce((acc, property) => {
       if (entity[property] !== undefined && typeof attributes[property] === 'object' && attributes[property] !== null && !Array.isArray(attributes[property])) {
-        acc[property] = patchEntityDeeply(entity[property], attributes[property]!);
+        acc[property] = patchEntityRecursively(entity[property], attributes[property]!);
       }
       return acc;
     }, attributes),
